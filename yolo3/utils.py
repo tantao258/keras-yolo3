@@ -1,24 +1,107 @@
 """Miscellaneous utility functions."""
 
+import os
+import random
 from functools import reduce
 
 from PIL import Image
 import numpy as np
 from matplotlib.colors import rgb_to_hsv, hsv_to_rgb
 
-def compose(*funcs):
-    """Compose arbitrarily many functions, evaluated left to right.
 
+# 将voc2007标注的xml数据转化为txt数据
+def voc_xml_to_txt(xmlfilepath="create_train_data/VOC2007/Annotations",
+                     txtsavepath ="create_train_data/VOC2007/ImageSets/Main",
+                     trainval_percent=0.1,
+                     train_percent=0.9):
+
+    """
+    在标注完成之后的数据[*.xml]，生成ImageSets/Main中，test.txt/train.txt/trainval.txt/val.txt
+    """
+
+    total_xml = os.listdir(xmlfilepath)
+    num = len(total_xml)
+
+    # 验证集数量
+    tv = int(num * trainval_percent)
+    # 训练集数量
+    tr = int(tv * train_percent)
+
+    list = range(num)
+    trainval = random.sample(list, tv)
+    train = random.sample(trainval, tr)
+
+    ftrainval = open(os.path.join(txtsavepath, "trainval.txt"), 'w')
+    ftest = open(os.path.join(txtsavepath, "test.txt"), 'w')
+    ftrain = open(os.path.join(txtsavepath, "train.txt"), 'w')
+    fval = open(os.path.join(txtsavepath, "val.txt"), 'w')
+
+    for i in list:
+        name = total_xml[i][:-4] + '\n'
+        if i in trainval:
+            ftrainval.write(name)
+            if i in train:
+                ftest.write(name)
+            else:
+                fval.write(name)
+        else:
+            ftrain.write(name)
+
+    ftrainval.close()
+    ftrain.close()
+    fval.close()
+    ftest.close()
+
+
+# 根据txt文件获取物体检测类别
+def get_classes(classes_path):
+    with open(classes_path) as f:
+        class_names = f.readlines()
+    class_names = [c.strip() for c in class_names]
+    """
+    ['aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car', 'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse', 'motorbike', 'person', 'pottedplant', 'sheep', 'sofa', 'train', 'tvmonitor']
+    """
+    return class_names
+
+
+# 根据txt文件获取 anchors
+def get_anchors(anchors_path):
+    with open(anchors_path) as f:
+        anchors = f.readline()
+    anchors = [float(x) for x in anchors.split(',')]
+    anchors_reshape = np.array(anchors).reshape(-1, 2)
+    """
+    [[ 10.  13.]
+     [ 16.  30.]
+     [ 33.  23.]
+     [ 30.  61.]
+     [ 62.  45.]
+     [ 59. 119.]
+     [116.  90.]
+     [156. 198.]
+     [373. 326.]]
+    """
+    return anchors_reshape
+
+
+def compose(*funcs):
+    """
+    Compose arbitrarily many functions, evaluated left to right.
     Reference: https://mathieularose.com/function-composition-in-python/
     """
+
     # return lambda x: reduce(lambda v, f: f(v), funcs, x)
     if funcs:
         return reduce(lambda f, g: lambda *a, **kw: g(f(*a, **kw)), funcs)
     else:
         raise ValueError('Composition of empty sequence not supported.')
 
+
 def letterbox_image(image, size):
-    '''resize image with unchanged aspect ratio using padding'''
+    """
+    resize image with unchanged aspect ratio using padding
+    """
+
     iw, ih = image.size
     w, h = size
     scale = min(w/iw, h/ih)
@@ -30,8 +113,10 @@ def letterbox_image(image, size):
     new_image.paste(image, ((w-nw)//2, (h-nh)//2))
     return new_image
 
+
 def rand(a=0, b=1):
     return np.random.rand()*(b-a) + a
+
 
 def get_random_data(annotation_line, input_shape, random=True, max_boxes=20, jitter=.3, hue=.1, sat=1.5, val=1.5, proc_img=True):
     '''random preprocessing for real-time data augmentation'''

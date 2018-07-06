@@ -10,38 +10,7 @@ from keras.models import Model
 from keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping
 
 from yolo3.model import preprocess_true_boxes, yolo_body, tiny_yolo_body, yolo_loss
-from yolo3.utils import get_random_data
-
-
-# 获取物体检测类别
-def get_classes(classes_path):
-    with open(classes_path) as f:
-        class_names = f.readlines()
-    class_names = [c.strip() for c in class_names]
-    """
-    ['aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car', 'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse', 'motorbike', 'person', 'pottedplant', 'sheep', 'sofa', 'train', 'tvmonitor']
-    """
-    return class_names
-
-
-# 获取 anchors
-def get_anchors(anchors_path):
-    with open(anchors_path) as f:
-        anchors = f.readline()
-    anchors = [float(x) for x in anchors.split(',')]
-    anchors_reshape = np.array(anchors).reshape(-1, 2)
-    """
-    [[ 10.  13.]
-     [ 16.  30.]
-     [ 33.  23.]
-     [ 30.  61.]
-     [ 62.  45.]
-     [ 59. 119.]
-     [116.  90.]
-     [156. 198.]
-     [373. 326.]]
-    """
-    return anchors_reshape
+from yolo3.utils import get_random_data, get_classes, get_anchors
 
 
 def data_generator(annotation_lines, batch_size, input_shape, anchors, num_classes):
@@ -142,7 +111,7 @@ def train(model, annotation_path, input_shape, anchors, num_classes, log_dir='se
 
 
 def main():
-    annotation_path = 'train_data/train.txt'
+    annotation_path = 'create_train_data/train.txt'
     log_dir = os.path.join("trained_model", time.strftime("%Y-%m-%d %H-%M-%S", time.localtime()))
     if os.path.exists("trained_model"):
         os.mkdir(log_dir)
