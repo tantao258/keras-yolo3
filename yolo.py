@@ -22,9 +22,14 @@ from keras.utils import multi_gpu_model
 gpu_num=1
 
 class YOLO(object):
-    def __init__(self):
-        self.model_path = 'model_data/yolo.h5' # model path or trained weights path
-        self.anchors_path = 'model_data/yolo_anchors.txt'
+    def __init__(self, mode="yolo"):
+        if mode == "yolo":
+            self.model_path = 'model_data/yolo.h5'  # model path or trained weights path
+            self.anchors_path = 'model_data/yolo_anchors.txt'
+        if mode == "tiny-yolo":
+            self.model_path = 'model_data/tiny-yolo.h5'  # model path or trained weights path
+            self.anchors_path = 'model_data/tiny-yolo_anchors.txt'
+
         self.classes_path = 'model_data/coco_classes.txt'
         self.score = 0.3
         self.iou = 0.45
