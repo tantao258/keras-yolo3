@@ -143,8 +143,8 @@ def train(model, annotation_path, input_shape, anchors, num_classes, log_dir='se
 
 def main():
     annotation_path = 'train_data/train.txt'
-    log_dir = os.path.join("self_trained_model", time.strftime("%Y-%m-%d %H-%M-%S", time.localtime()))
-    if os.path.exists("self_trained_model"):
+    log_dir = os.path.join("trained_model", time.strftime("%Y-%m-%d %H-%M-%S", time.localtime()))
+    if os.path.exists("trained_model"):
         os.mkdir(log_dir)
     classes_path = 'model_data/voc_classes.txt'
     anchors_path = 'model_data/yolo_anchors.txt'
