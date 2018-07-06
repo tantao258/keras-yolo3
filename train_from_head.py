@@ -24,6 +24,7 @@ def get_classes(classes_path):
     return class_names
 
 
+# 获取 anchors
 def get_anchors(anchors_path):
     with open(anchors_path) as f:
         anchors = f.readline()
