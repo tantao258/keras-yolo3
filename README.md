@@ -23,20 +23,6 @@ python yolo.py   OR   python yolo_video.py [video_path] [output_path(optional)]
 
 For Tiny YOLOv3, just do in a similar way. And modify model path and anchor path by modify mode=="tiny-yolo" in yolo.py.
 
-def __init__(self, mode="yolo"):
-    if mode == "yolo":
-        self.model_path = 'model_data/yolo.h5'  # model path or trained weights path
-        self.anchors_path = 'model_data/yolo_anchors.txt'
-    if mode == "tiny-yolo":
-        self.model_path = 'model_data/tiny-yolo.h5'  # model path or trained weights path
-        self.anchors_path = 'model_data/tiny-yolo_anchors.txt'
-
-
-
-
-
-
-
 ---
 
 4. MultiGPU usage is an optinal. Change the number of gpu and add gpu device id
