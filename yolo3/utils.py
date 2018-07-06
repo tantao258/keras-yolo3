@@ -9,6 +9,19 @@ import numpy as np
 from matplotlib.colors import rgb_to_hsv, hsv_to_rgb
 
 
+# 创建初始项目相关文件夹
+def mkdir_for_newProject(prefix, project_name):
+    os.mkdir(os.path.join(prefix, project_name))
+    os.mkdir(os.path.join(prefix, project_name, "VOC2007"))
+    if os.path.exists(os.path.join(prefix, project_name, "VOC2007")):
+        os.mkdir(os.path.join(prefix, project_name, "VOC2007", "Annotations"))
+        os.mkdir(os.path.join(prefix, project_name, "VOC2007", "ImageSets"))
+    os.mkdir(os.path.join(prefix, project_name, "VOC2007", "JPEGImages"))
+    os.mkdir(os.path.join(prefix, project_name, "logs"))
+    os.mkdir(os.path.join(prefix, project_name, "checkpoint"))
+    return None
+
+
 # 将voc2007标注的xml数据转化为txt数据
 def voc_xml_to_txt(xmlfilepath="create_train_data/VOC2007/Annotations",
                      txtsavepath ="create_train_data/VOC2007/ImageSets/Main",

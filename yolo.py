@@ -22,11 +22,11 @@ from keras.utils import multi_gpu_model
 gpu_num=1
 
 class YOLO(object):
-    def __init__(self, mode="yolo"):
-        if mode == "yolo":
+    def __init__(self, type="yolo"):
+        if type == "yolo":
             self.model_path = 'model_data/yolo.h5'  # model path or trained weights path
             self.anchors_path = 'model_data/yolo_anchors.txt'
-        if mode == "tiny-yolo":
+        if type == "tiny-yolo":
             self.model_path = 'model_data/tiny-yolo.h5'  # model path or trained weights path
             self.anchors_path = 'model_data/tiny-yolo_anchors.txt'
 

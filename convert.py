@@ -21,24 +21,9 @@ from keras.regularizers import l2
 from keras.utils.vis_utils import plot_model as plot
 
 
-parser = argparse.ArgumentParser(description='Darknet To Keras Converter.')
-parser.add_argument('config_path', help='Path to Darknet cfg file.')
-parser.add_argument('weights_path', help='Path to Darknet weights file.')
-parser.add_argument('output_path', help='Path to output Keras model file.')
-parser.add_argument(
-    '-p',
-    '--plot_model',
-    help='Plot generated Keras model and save as image.',
-    action='store_true')
-parser.add_argument(
-    '-w',
-    '--weights_only',
-    help='Save as Keras weights file instead of model file.',
-    action='store_true')
-
 def unique_config_sections(config_file):
-    """Convert all config sections to have unique names.
-
+    """
+    Convert all config sections to have unique names.
     Adds unique suffixes to config sections for compability with configparser.
     """
     section_counters = defaultdict(int)
@@ -54,18 +39,21 @@ def unique_config_sections(config_file):
     output_stream.seek(0)
     return output_stream
 
-# %%
-def _main(args):
-    config_path = os.path.expanduser(args.config_path)
-    weights_path = os.path.expanduser(args.weights_path)
-    assert config_path.endswith('.cfg'), '{} is not a .cfg file'.format(
-        config_path)
-    assert weights_path.endswith(
-        '.weights'), '{} is not a .weights file'.format(weights_path)
 
-    output_path = os.path.expanduser(args.output_path)
-    assert output_path.endswith(
-        '.h5'), 'output path {} is not a .h5 file'.format(output_path)
+def Darknet_to_Keras(Darknet_config_path, Darknet_weights_path, output_path, weights_only=True, plot_model=False):
+    """
+    :param Darknet_config_path: Path to Darknet cfg file.
+    :param Darknet_weights_path: Path to Darknet weights file.
+    :param output_path: Path to output Keras model file.
+    :param weights_only: Save as Keras weights file instead of model file.
+    :param plot_model: Plot generated Keras model and save as image.
+    """
+
+    config_path = Darknet_config_path
+    weights_path = Darknet_weights_path
+    assert config_path.endswith('.cfg'), '{} is not a .cfg file'.format(config_path)
+    assert weights_path.endswith('.weights'), '{} is not a .weights file'.format(weights_path)
+    assert output_path.endswith('.h5'), 'output path {} is not a .h5 file'.format(output_path)
     output_root = os.path.splitext(output_path)[0]
 
     # Load weights and config.
@@ -238,7 +226,7 @@ def _main(args):
     if len(out_index)==0: out_index.append(len(all_layers)-1)
     model = Model(inputs=input_layer, outputs=[all_layers[i] for i in out_index])
     print(model.summary())
-    if args.weights_only:
+    if weights_only:
         model.save_weights('{}'.format(output_path))
         print('Saved Keras weights to {}'.format(output_path))
     else:
@@ -253,10 +241,7 @@ def _main(args):
     if remaining_weights > 0:
         print('Warning: {} unused weights'.format(remaining_weights))
 
-    if args.plot_model:
-        plot(model, to_file='{}.png'.format(output_root), show_shapes=True)
-        print('Saved model plot to {}.png'.format(output_root))
+    if plot_model:
+        plot(model, to_file='{}/model.png'.format(output_root), show_shapes=True)
+        print('Saved model plot to {}/model.png'.format(output_root))
 
-
-if __name__ == '__main__':
-    _main(parser.parse_args())
