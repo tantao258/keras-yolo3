@@ -24,9 +24,9 @@ def mkdir_for_newProject(prefix, project_name):
 
 # 将voc2007标注的xml数据转化为txt数据
 def voc_xml_to_txt(xmlfilepath="create_train_data/VOC2007/Annotations",
-                     txtsavepath ="create_train_data/VOC2007/ImageSets/Main",
-                     trainval_percent=0.1,
-                     train_percent=0.9):
+                   txtsavepath ="create_train_data/VOC2007/ImageSets",
+                   trainval_percent=0.8,
+                   train_percent=0.8):
 
     """
     在标注完成之后的数据[*.xml]，生成ImageSets/Main中，test.txt/train.txt/trainval.txt/val.txt
@@ -35,9 +35,9 @@ def voc_xml_to_txt(xmlfilepath="create_train_data/VOC2007/Annotations",
     total_xml = os.listdir(xmlfilepath)
     num = len(total_xml)
 
-    # 验证集数量
+    # 训练集+验证集数量占总样本 trainval_percent
     tv = int(num * trainval_percent)
-    # 训练集数量
+    # 训练集数量占 训练集+验证集数量 train_percent
     tr = int(tv * train_percent)
 
     list = range(num)
@@ -54,11 +54,11 @@ def voc_xml_to_txt(xmlfilepath="create_train_data/VOC2007/Annotations",
         if i in trainval:
             ftrainval.write(name)
             if i in train:
-                ftest.write(name)
+                ftrain.write(name)
             else:
                 fval.write(name)
         else:
-            ftrain.write(name)
+            ftest.write(name)
 
     ftrainval.close()
     ftrain.close()

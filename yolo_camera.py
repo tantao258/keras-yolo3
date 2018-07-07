@@ -1,6 +1,5 @@
-import sys
-from yolo import YOLO
-from yolo import detect_camera
+from yolo3.yolo import YOLO
+from yolo3.yolo import detect_camera
 
 if __name__ == '__main__':
     detect_camera(yolo=YOLO())

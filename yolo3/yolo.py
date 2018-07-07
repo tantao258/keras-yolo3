@@ -21,12 +21,15 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 from keras.utils import multi_gpu_model
 gpu_num=1
 
+
 class YOLO(object):
-    def __init__(self, type="yolo"):
-        if type == "yolo":
+    def __init__(self, model_type=1):
+        # yolo model
+        if model_type == 1:
             self.model_path = 'model_data/yolo.h5'  # model path or trained weights path
             self.anchors_path = 'model_data/yolo_anchors.txt'
-        if type == "tiny-yolo":
+        # tiny-yolo model
+        if model_type == 2:
             self.model_path = 'model_data/tiny-yolo.h5'  # model path or trained weights path
             self.anchors_path = 'model_data/tiny-yolo_anchors.txt'
 
