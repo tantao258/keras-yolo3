@@ -8,9 +8,10 @@ import shutil
 def main():
 
     config = {
-        "method": 2,            #  1. quick_start  2. train_new_model
+        "method": 1,            #  1. quick_start  2. train_new_model
         "model_type": 1,        #  1. yolo         2. tiny-yolo
         "classes_path": "model_data/voc_classes.txt",
+        "train_method": 1,      # fine-tune        2. train from head
     }
 
     def quick_start():
@@ -97,16 +98,23 @@ def main():
             list_file.close()
 
         # 训练模型
+        if config["train_method"] == 1:
+            """
+            在训练好的权重yolov3.weights基础上进行fing-tune
+            """
+
+
+
+        if config["train_method"] == 2:
+            """
+            从头开始训练网络，不利用训练好的权重yolov3.weights   
+            """
 
     if config["method"] == 1:
         quick_start()
 
-
     if config["method"] == 2:
         train_new_model(data_path="../dataset/")
-
-
-
 
 
 main()
